@@ -1,0 +1,9 @@
+[user]
+  email = ragesh@rageshkrishna.com
+  name = Ragesh Krishna
+[push]
+  default = simple
+[alias]
+  latest = !git checkout master && git pull origin master
+[core]
+  excludesfile = ~/.gitignore
