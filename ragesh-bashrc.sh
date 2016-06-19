@@ -4,11 +4,19 @@ if [ -d "$HOME/.local/bin" ]; then
   PATH="$HOME/.local/bin:$PATH"
 fi
 
-if [[ -z "$TMUX" ]] ;then
-  ID="`tmux ls | grep -vm1 attached | cut -d: -f1`" # get the id of a deattached session
-  if [[ -z "$ID" ]] ;then # if not available create a new one
-      tmux new-session
-  else
-      tmux attach-session -t "$ID" # if available attach to it
-  fi
+alias tmux='tmux -2'
+# TMUX
+if which tmux 2>&1 >/dev/null; then
+  # if no session is started, start a new session
+  test -z "$TMUX" && (tmux attach || tmux new-session)
+fi
+
+
+LS_COLORS=$LS_COLORS:'di=01;36:'; export LS_COLORS
+
+alias shgrep='grep --exclude-dir=logs --exclude-dir=node_modules --exclude-dir=.git --exclude=*.min.js --exclude=*.cat.js -Rn'
+alias shmigrate='psql -h 172.17.42.1 -U apiuser -W -d shipdb -f ~/api/models/migrations.sql'
+
+if [ "$color_prompt" = yes ]; then
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[00;36m\]\w$(__git_ps1 " \[\033[38;5;208m\](%s)")\[\033[00m\]\$ '
 fi
