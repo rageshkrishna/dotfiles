@@ -17,6 +17,4 @@ LS_COLORS=$LS_COLORS:'di=01;36:'; export LS_COLORS
 alias shgrep='grep --exclude-dir=logs --exclude-dir=node_modules --exclude-dir=.git --exclude=*.min.js --exclude=*.cat.js -Rn'
 alias shmigrate='psql -h 172.17.42.1 -U apiuser -W -d shipdb -f ~/api/models/migrations.sql'
 
-if [ "$color_prompt" = yes ]; then
-  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[00;36m\]\w$(__git_ps1 " \[\033[38;5;208m\](%s)")\[\033[00m\]\$ '
-fi
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[00;36m\]\w$(__git_ps1 " \[\033[38;5;208m\](%s)")\[\033[00m\]\$ '
