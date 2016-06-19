@@ -1,0 +1,27 @@
+#cloud-config
+users:
+  - name: shippable
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGh2CXtf/Nf0iW/kCJy4CdiE2wYgVEsng6BXnirX1V1Wz0cBhAkYk7M11CxcLEDQPwUjRjSF5H8VNDSWU65TCcLc55otdCt1hyKgyJskKxblhG+N+Q0mzq7PInBjyJNU0YZg6Ln3bk/SE+h8wwKfxWcXknrles8pmZ+zow60pwYl9+PxcO06Hox0jC1nTIZoEUy0CtYnbEtMiTLq5madagIF0V/L/HBz0Xv2dGhUy66yem/4B2IP/tO0JD6S2wteEseFXIeIDBZI0dQpmFvxASo+9C5aao1TTisoEgV39B7HvH6iowPUXb8/kHAvQiey+3kxvj8CyVTcpyjyAWCf+b rages@DESKTOP-9COVJ9B
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
+
+package_update: true
+package_upgrade: true
+packages:
+  - vim
+  - git
+  - python-pip
+  
+runcmd:
+  - mkdir -p /tmp/init/dotfiles
+  - git clone https://github.com/rageshkrishna/dotfiles.git /tmp/init/dotfiles
+  - sudo su shippable -c "pushd /tmp/init/dotfiles && ./setup-tmux.sh && popd"
+  - sudo su shippable -c "pushd /tmp/init/dotfiles && ./setup-bash.sh && popd"
+  - sudo su shippable -c "pushd /tmp/init/dotfiles && ./setup-vim.sh && popd"
+  - 'sudo su shippable -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash"'
+  - sudo su shippable -c "source ~/.nvm/nvm.sh && nvm install node"
+  - chown -R shippable:shippable /home/shippable  
+  - sed -i -e '/^Port/s/^.*$/Port 4222/' etc/ssh/sshd_config
+  - sudo service ssh restart
