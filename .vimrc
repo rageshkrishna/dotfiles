@@ -4,7 +4,9 @@ if has("win32")
   set t_Co=256
   let &t_AB="\e[48;5;%dm"
   let &t_AF="\e[38;5;%dm"
+  "set guifont=Consolas:h11:cANSI
   set guifont=Consolas:h11:cANSI
+  set encoding=utf-8
 endif
 
 set nocompatible              " be iMproved
