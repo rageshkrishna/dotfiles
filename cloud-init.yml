@@ -1,27 +1,24 @@
 #cloud-config
 users:
-  - name: shippable
+  - default
+  - name: rages
     ssh-authorized-keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGh2CXtf/Nf0iW/kCJy4CdiE2wYgVEsng6BXnirX1V1Wz0cBhAkYk7M11CxcLEDQPwUjRjSF5H8VNDSWU65TCcLc55otdCt1hyKgyJskKxblhG+N+Q0mzq7PInBjyJNU0YZg6Ln3bk/SE+h8wwKfxWcXknrles8pmZ+zow60pwYl9+PxcO06Hox0jC1nTIZoEUy0CtYnbEtMiTLq5madagIF0V/L/HBz0Xv2dGhUy66yem/4B2IP/tO0JD6S2wteEseFXIeIDBZI0dQpmFvxASo+9C5aao1TTisoEgV39B7HvH6iowPUXb8/kHAvQiey+3kxvj8CyVTcpyjyAWCf+b rages@DESKTOP-9COVJ9B
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
-    groups: sudo
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPVbB5cWrB+F9Moy1Ic0O83+Jydgn49/K7bvDQtmJhRl rages@Acacia
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC4sO8y0r1fbE2nY2hwlpAlxdtWrUunX8FRPeKmn1yajVFtqbBOrMdv895rxQxC7g5t3grXihIppv3wD4IR6kp8WWUrtHLzlf/wVNx+PtH+WLLXxOsbztOFuvpinwB562DyiPD127XyU9gHGvcUio4zfySmmTuLXElpaPa05QVrVOpaBU3P7fphv5vJ1kxUZXzr7kpqN48jr6rwfld/NL7fBFsbIqV16wR0OiOoIk4Hn2V0YARJypFNhMSFhUQG+NQg6gVlyxvciDVkrJrPsJz9YJunEoIPLDGbYe1+nW/CzgrWlFcH0nzJfwfGBjDa5MNZPWI6TswzUWZJTK4sG98ZWIUoHytlFMY1Nill8SEqV0zLvzOk2RgnKAGEd9IEFXA+SyBNAn3NORfWfmhmNSZO3oMmzDdKUV2L2F+k4u33QttxPYXigeVzEi2sxK/LRnHgNAMTMLX/xva2m7wYsAWtjBDs7Z+YccQAA77yiXVamxDToa6x428dH3MLgxy52L0= rages@Euphorbia
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    groups: [adm, cdrom, dip, lxd, sudo]
     shell: /bin/bash
+    homedir: /home/rages
 
-package_update: true
-package_upgrade: true
-packages:
-  - vim
-  - git
-  - python-pip
-  
+# package_update: true
+# package_upgrade: true
+
 runcmd:
   - mkdir -p /tmp/init/dotfiles
   - git clone https://github.com/rageshkrishna/dotfiles.git /tmp/init/dotfiles
-  - sudo su shippable -c "pushd /tmp/init/dotfiles && ./setup-tmux.sh && popd"
-  - sudo su shippable -c "pushd /tmp/init/dotfiles && ./setup-bash.sh && popd"
-  - sudo su shippable -c "pushd /tmp/init/dotfiles && ./setup-vim.sh && popd"
-  - 'sudo su shippable -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash"'
-  - sudo su shippable -c "source ~/.nvm/nvm.sh && nvm install node"
-  - chown -R shippable:shippable /home/shippable  
-  - sed -i -e '/^Port/s/^.*$/Port 4222/' etc/ssh/sshd_config
-  - sudo service ssh restart
+  - sudo su rages -c "pushd /tmp/init/dotfiles && ./setup-vim.sh && popd"
+  - |
+    cat > /home/rages/.tmux.conf <<EOF
+    set -g mouse "on"
+    set -g default-terminal "screen-256color"
+    EOF
